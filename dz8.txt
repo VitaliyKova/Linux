@@ -1,0 +1,30 @@
+GNU nano 6.2                                 cleaner.sh                                           
+#!/bin/bash
+if [ $# -lt 1 ]
+    then
+        echo "Usage: $0 <dir1>"
+        exit 1
+fi
+if [ -d $1 ]
+    then
+        delete_files=$(find $1 -type f | grep -E "\.bak$|\.tmp$|\.backup$")
+        if [ -n "$delete_files" ]; then
+            echo "Следующие файлы будут удалены:"
+            echo "$delete_files"
+            echo "Удалить их?(y/n)"
+            read answer
+            if [ "$answer" == "y" ]; then
+                echo "$delete_files" | xargs rm
+                echo "Файлы успешно удалены"
+            else
+                echo "Удаление отменено"
+                exit 4
+            fi
+        else
+            echo "В указаной дирректории нет искомых файлов"
+            exit 3      
+        fi
+else
+    "$1 дирректории не существует!"
+    exit 2
+fi
